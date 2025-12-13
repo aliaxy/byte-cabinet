@@ -3,6 +3,16 @@ package main
 import (
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
+
+	"byte-cabinet/internal/config"
+	"byte-cabinet/internal/database"
+	"byte-cabinet/internal/handler"
+	"byte-cabinet/internal/middleware"
+	"byte-cabinet/internal/repository"
+	"byte-cabinet/internal/service"
+	"byte-cabinet/pkg/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -11,44 +21,132 @@ import (
 )
 
 func main() {
-	// Create a new Fiber instance
+	// Load configuration
+	cfg, err := config.Load("")
+	if err != nil {
+		log.Fatalf("Failed to load configuration: %v", err)
+	}
+
+	// Initialize database
+	db, err := database.New(cfg.Database.Path)
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+	defer db.Close()
+
+	// Run migrations
+	log.Println("📦 Running database migrations...")
+	if err := db.Migrate(); err != nil {
+		log.Fatalf("Failed to run migrations: %v", err)
+	}
+	log.Println("✅ Database migrations completed")
+
+	// Initialize JWT manager
+	jwtManager := utils.NewJWTManager(
+		cfg.JWT.Secret,
+		cfg.JWT.AccessTokenTTL,
+		cfg.JWT.RefreshTokenTTL,
+	)
+
+	// Initialize repositories
+	userRepo := repository.NewUserRepository(db.DB)
+
+	// Initialize services
+	authService := service.NewAuthService(userRepo, jwtManager)
+
+	// Initialize handlers
+	authHandler := handler.NewAuthHandler(authService)
+
+	// Create Fiber app
 	app := fiber.New(fiber.Config{
-		AppName: "Byte Cabinet",
+		AppName:      cfg.Blog.Title,
+		ErrorHandler: customErrorHandler,
 	})
 
-	// Middleware
-	app.Use(logger.New())
+	// Global middleware
+	app.Use(logger.New(logger.Config{
+		Format: "[${time}] ${status} - ${latency} ${method} ${path}\n",
+	}))
 	app.Use(recover.New())
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "*",
+		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
+		AllowHeaders:     "Origin,Content-Type,Accept,Authorization",
+		AllowCredentials: false,
+	}))
 
 	// Health check endpoint
 	app.Get("/health", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
-			"status":  "ok",
-			"message": "Byte Cabinet is running",
+			"success": true,
+			"data": fiber.Map{
+				"status":  "healthy",
+				"service": cfg.Blog.Title,
+			},
 		})
 	})
 
-	// API routes group
+	// API routes
 	api := app.Group("/api")
 	v1 := api.Group("/v1")
 
-	// TODO: Register routes here
+	// Create auth middleware
+	authMiddleware := middleware.AuthMiddleware(jwtManager)
+
+	// Register routes
+	authHandler.RegisterRoutes(v1, authMiddleware)
+
+	// API welcome route
 	v1.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
-			"message": "Welcome to Byte Cabinet API v1",
+			"success": true,
+			"data": fiber.Map{
+				"message": "Welcome to " + cfg.Blog.Title + " API v1",
+				"version": "1.0.0",
+			},
 		})
 	})
 
-	// Get port from environment variable or use default
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "3000"
-	}
+	// Graceful shutdown
+	go func() {
+		sigChan := make(chan os.Signal, 1)
+		signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+		<-sigChan
+
+		log.Println("🛑 Shutting down server...")
+		if err := app.Shutdown(); err != nil {
+			log.Printf("Error during shutdown: %v", err)
+		}
+	}()
 
 	// Start server
-	log.Printf("🚀 Server starting on port %s", port)
-	if err := app.Listen(":" + port); err != nil {
+	addr := cfg.Server.Address()
+	log.Printf("🚀 Server starting on %s", addr)
+	log.Printf("📝 Blog: %s", cfg.Blog.Title)
+	log.Printf("🔧 Mode: %s", cfg.Server.Mode)
+
+	if err := app.Listen(addr); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
+}
+
+// customErrorHandler handles errors globally
+func customErrorHandler(c *fiber.Ctx, err error) error {
+	// Default status code
+	code := fiber.StatusInternalServerError
+	message := "Internal Server Error"
+
+	// Check if it's a Fiber error
+	if e, ok := err.(*fiber.Error); ok {
+		code = e.Code
+		message = e.Message
+	}
+
+	return c.Status(code).JSON(fiber.Map{
+		"success": false,
+		"error": fiber.Map{
+			"code":    code,
+			"message": message,
+		},
+	})
 }
