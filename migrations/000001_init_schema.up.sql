@@ -135,7 +135,7 @@ INSERT INTO users (username, email, password_hash, display_name)
 VALUES (
     'admin',
     'admin@example.com',
-    '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/X4.dDPKX5V0vhKbHu',
+    '$2a$12$BxgjfpLUowZE4CVs78K.9ehrhk6HhjGoE7wEgVG3kSp3ySletIqK.',
     'Admin'
 );
 
