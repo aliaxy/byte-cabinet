@@ -1,34 +1,89 @@
 # =========================
 # Go
 # =========================
+# Binaries
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
+bin/
+build/
+
+# Test binary
 *.test
+
+# Output of go coverage tool
 *.out
+coverage.html
+
+# Go workspace file
 go.work
-go.work.sum
 
-# Go build output
-/bin/
-/build/
-/dist/
-
-# Go vendor (if not using)
-# vendor/
+# Dependency directories
+vendor/
 
 # =========================
-# IDE & Editors
+# Vue / Node.js
 # =========================
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# =========================
+# IDE / Editor
+# =========================
+# VSCode
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# JetBrains (GoLand, WebStorm, etc.)
 .idea/
-.vscode/
+*.iml
+
+# Vim
 *.swp
 *.swo
 *~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+
+# =========================
+# OS Generated
+# =========================
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
 Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+.directory
 
 # =========================
 # Environment & Secrets
@@ -36,42 +91,12 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
-*.env
+.env.development
+.env.production
+*.pem
+*.key
 config.local.yaml
 config.local.json
-secrets/
-
-# =========================
-# Logs
-# =========================
-*.log
-logs/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# =========================
-# Vue / Node.js Frontend
-# =========================
-web/node_modules/
-web/dist/
-web/.output/
-web/.nuxt/
-web/*.local
-
-# Dependencies
-node_modules/
-
-# Testing
-coverage/
-*.lcov
-.nyc_output/
-
-# Build cache
-.cache/
-.parcel-cache/
-.vite/
 
 # =========================
 # Database
@@ -79,18 +104,29 @@ coverage/
 *.db
 *.sqlite
 *.sqlite3
-data/
 
 # =========================
-# Temporary files
+# Misc
 # =========================
+# Temporary files
 tmp/
 temp/
 *.tmp
-*.bak
+*.temp
 
-# =========================
-# Uploaded files
-# =========================
+# Cache
+.cache/
+*.cache
+
+# Upload files (if stored locally during development)
 uploads/
-static/uploads/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Debug
+debug/

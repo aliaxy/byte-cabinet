@@ -1,0 +1,36 @@
+# <emoji> <type>: <short description>
+#
+# Example:
+# ✨ feat: add user authentication module
+#
+# ─────────────────────────────────────────────────────────────────────
+# Emoji Reference:
+# ─────────────────────────────────────────────────────────────────────
+# ✨ feat:      Introduce new features
+# 🐛 fix:       Fix a bug
+# 📝 docs:      Add or update documentation
+# 💄 style:     Add or update UI and style files
+# ♻️  refactor:  Refactor code
+# ⚡️ perf:      Improve performance
+# ✅ test:      Add, update, or pass tests
+# 🔧 config:    Add or update configuration files
+# 🏗️  arch:      Make architectural changes
+# 📦 build:     Build system or external dependencies
+# 🚀 deploy:    Deploy stuff
+# 🔒 security:  Fix security issues
+# 🗑️  remove:    Remove code or files
+# 🚚 move:      Move or rename resources
+# 🎨 format:    Improve structure/format of the code
+# 🔥 prune:     Remove dead code
+# 🚧 wip:       Work in progress
+# 💚 ci:        Fix CI build
+# ⬆️  upgrade:   Upgrade dependencies
+# ⬇️  downgrade: Downgrade dependencies
+# 🎉 init:      Begin a project
+# 🔀 merge:     Merge branches
+# ⏪ revert:    Revert changes
+# 🐳 docker:    Docker related changes
+# 🗃️  database:  Database related changes
+# 💡 comment:   Add or update comments in source code
+# 🍱 assets:    Add or update assets
+# ─────────────────────────────────────────────────────────────────────
