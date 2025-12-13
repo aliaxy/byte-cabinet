@@ -6,7 +6,7 @@ import (
 	"errors"
 	"time"
 
-	"byte-cabinet/internal/model"
+	"github.com/aliaxy/byte-cabinet/internal/model"
 
 	"github.com/jmoiron/sqlx"
 )

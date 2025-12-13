@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"byte-cabinet/internal/model"
-	"byte-cabinet/internal/service"
-	"byte-cabinet/pkg/response"
+	"github.com/aliaxy/byte-cabinet/internal/model"
+	"github.com/aliaxy/byte-cabinet/internal/service"
+	"github.com/aliaxy/byte-cabinet/pkg/response"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"

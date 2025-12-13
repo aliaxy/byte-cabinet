@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"byte-cabinet/internal/model"
-	"byte-cabinet/internal/repository"
-	"byte-cabinet/pkg/utils"
+	"github.com/aliaxy/byte-cabinet/internal/model"
+	"github.com/aliaxy/byte-cabinet/internal/repository"
+	"github.com/aliaxy/byte-cabinet/pkg/utils"
 )
 
 var (

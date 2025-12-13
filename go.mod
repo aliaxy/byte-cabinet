@@ -1,4 +1,4 @@
-module byte-cabinet
+module github.com/aliaxy/byte-cabinet
 
 go 1.25.5
 

@@ -3,7 +3,7 @@ package middleware
 import (
 	"strings"
 
-	"byte-cabinet/pkg/utils"
+	"github.com/aliaxy/byte-cabinet/pkg/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
