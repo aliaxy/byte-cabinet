@@ -95,8 +95,14 @@ Desktop.ini
 .env.production
 *.pem
 *.key
+config.yaml
 config.local.yaml
 config.local.json
+
+# =========================
+# Data Directory
+# =========================
+data/
 
 # =========================
 # Database
